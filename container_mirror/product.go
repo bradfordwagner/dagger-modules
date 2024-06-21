@@ -19,6 +19,10 @@ import (
 	"encoding/json"
 )
 
+type Products struct {
+	Products []Product `json:"products"`
+}
+
 type Product struct {
 	Repo         string `json:"repo"`
 	Tag          string `json:"tag"`
@@ -49,7 +53,7 @@ func (m *ContainerMirror) Product(
 	}
 
 	// convert products to json
-	bytes, err := json.Marshal(products)
+	bytes, err := json.Marshal(Products{Products: products})
 	o = string(bytes)
 	return
 }
