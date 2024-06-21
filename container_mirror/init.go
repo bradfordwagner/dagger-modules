@@ -16,36 +16,35 @@ package main
 
 import (
 	"context"
-	"dagger/container-mirror/internal/dagger"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // Init creates an example yaml config for cicd to use
 func (m *ContainerMirror) Init(
 	ctx context.Context,
 	src *Directory,
-) (err error) {
-
+) (s string, err error) {
+	// default config
 	c := Config{
 		TargetRepo: "ghcr.io/bradfordwagner/template-mirror",
 		Builds: []Build{
-			{Repo: "alpine", Tag: "3.19", Architectures: []string{"linux/amd64", "linux/arm64"}},
 			{Repo: "alpine", Tag: "3.18", Architectures: []string{"linux/amd64", "linux/arm64"}},
+			{Repo: "alpine", Tag: "3.19", Architectures: []string{"linux/amd64", "linux/arm64"}},
+			{Repo: "archlinux", Tag: "latest", Architectures: []string{"linux/amd64"}},
 			{Repo: "debian", Tag: "bookworm", Architectures: []string{"linux/amd64", "linux/arm64"}},
 			{Repo: "debian", Tag: "bullseye", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "ubuntu", Tag: "noble", Architectures: []string{"linux/amd64", "linux/arm64"}},
 			{Repo: "ubuntu", Tag: "mantic", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "archlinux", Tag: "latest", Architectures: []string{"linux/amd64"}},
+			{Repo: "ubuntu", Tag: "noble", Architectures: []string{"linux/amd64", "linux/arm64"}},
 		},
 	}
 
-	// src.WithNewFile(path string, contents string, opts ...dagger.DirectoryWithNewFileOpts)
+	// convert to yaml
 	b, err := yaml.Marshal(c)
 	if err != nil {
 		return
 	}
 
-	src.WithNewFile("config.yaml", string(b), dagger.DirectoryWithNewFileOpts{Permissions: 755})
-	return
+	// return yaml
+	return string(b), nil
 }
