@@ -26,6 +26,7 @@ type Product struct {
 }
 
 // Cartesian returns the cartesian product of all builds
+// this is used to explode the builds
 func (m *ContainerMirror) Product(
 	ctx context.Context,
 	src *Directory,
