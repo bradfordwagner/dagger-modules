@@ -16,19 +16,21 @@ package main
 
 import (
 	"context"
-	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 type ContainerMirror struct{}
 
 type Config struct {
-	TargetRepo string `json:"target_repo"`
+	TargetRepo string  `yaml:"target_repo"`
+	Builds     []Build `yaml:"builds"`
 }
 
 type Build struct {
-	Repo          string   `json:"repo"`
-	Tag           string   `json:"tag"`
-	Architectures []string `json:"archs"`
+	Repo          string   `yaml:"repo"`
+	Tag           string   `yaml:"tag"`
+	Architectures []string `yaml:"archs"`
 }
 
 // Returns a container that echoes whatever string argument is provided
@@ -36,20 +38,20 @@ type Build struct {
 func (m *ContainerMirror) Mirror(
 	ctx context.Context,
 	src *Directory,
-) string {
-	entries, err := src.Entries(ctx)
+) (o string, err error) {
+	c, err := loadConfig(ctx, src)
 	if err != nil {
-		return err.Error()
+		return
 	}
-	return strings.Join(entries, "\n")
+
+	return c.TargetRepo, nil
 }
 
-// Returns lines that match a pattern in the files of the provided Directory
-func (m *ContainerMirror) GrepDir(ctx context.Context, directoryArg *Directory, pattern string) (string, error) {
-	return dag.Container().
-		From("alpine:latest").
-		WithMountedDirectory("/mnt", directoryArg).
-		WithWorkdir("/mnt").
-		WithExec([]string{"grep", "-R", pattern, "."}).
-		Stdout(ctx)
+func loadConfig(ctx context.Context, src *Directory) (c Config, err error) {
+	yml, _ := dag.Lib().OpenConfigYaml(ctx, src)
+	err = yaml.Unmarshal([]byte(yml), &c)
+	if err != nil {
+		return
+	}
+	return
 }

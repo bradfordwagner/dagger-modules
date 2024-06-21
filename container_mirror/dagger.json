@@ -1,5 +1,12 @@
 {
   "name": "container_mirror",
   "sdk": "go",
+  "dependencies": [
+    {
+      "name": "lib",
+      "source": "github.com/bradfordwagner/dagger-modules/lib@bf72badcaeb1a3eb306cb8c0510d5c1ba884592f"
+    }
+  ],
+  "source": ".",
   "engineVersion": "v0.11.8"
 }
