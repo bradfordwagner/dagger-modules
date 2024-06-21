@@ -21,11 +21,8 @@ import (
 type Lib struct{}
 
 // Returns lines that match a pattern in the files of the provided Directory
-func (m *Lib) OpenConfigYaml(ctx context.Context, src Directory) (bytes []byte, err error) {
+func (m *Lib) OpenConfigYaml(ctx context.Context, src Directory) (s string) {
 	configFile := src.File("config.yaml")
-	bytes, err = configFile.Contents(ctx)
-	if err != nil {
-		return
-	}
-	return bytes, nil
+	s, _ = configFile.Contents(ctx)
+	return
 }
