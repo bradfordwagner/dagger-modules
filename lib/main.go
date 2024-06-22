@@ -64,9 +64,9 @@ func (m *Lib) ManifestTool(
 		WithSecretVariable("GITHUB_TOKEN", token).
 		WithFocus().
 		WithExec([]string{
-			"push", "from-args",
 			"--username", "${GITHUB_ACTOR}",
 			"--password", "${GITHUB_TOKEN}",
+			"push", "from-args",
 			"--platforms", strings.Join(arches, ","),
 			"--template", image + "-ARCH",
 			"--target", image,
