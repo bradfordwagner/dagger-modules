@@ -23,8 +23,6 @@ func (m *ContainerMirror) Manifest(
 	src *Directory,
 	// +default="latest"
 	version string,
-	// +default=true
-	isDev bool,
 	// GitHub actor, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
 	actor *Secret,
 	// GitHub API token, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
