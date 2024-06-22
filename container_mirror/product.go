@@ -17,6 +17,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 )
 
 type ProductFormat struct {
@@ -25,6 +26,7 @@ type ProductFormat struct {
 	Tag          string `json:"tag"`
 	Architecture string `json:"arch"`
 	Runner       string `json:"runner"`
+	TargetImage  string `json:"target_image"` // without architecture suffix
 }
 
 // Cartesian returns the cartesian product of all builds
@@ -32,6 +34,8 @@ type ProductFormat struct {
 func (m *ContainerMirror) Product(
 	ctx context.Context,
 	src *Directory,
+	// +default="latest"
+	version string,
 ) (products []ProductFormat, err error) {
 	c, err := loadConfig(ctx, src)
 	if err != nil {
@@ -52,6 +56,7 @@ func (m *ContainerMirror) Product(
 				Architecture: a,
 				Index:        i,
 				Runner:       runner,
+				TargetImage:  fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, b.Repo, b.Tag),
 			})
 			i++
 		}

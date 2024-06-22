@@ -33,7 +33,7 @@ func (m *ContainerMirror) Build(
 	isDev bool,
 ) (o string, err error) {
 	// generate products
-	products, err := m.Product(ctx, src)
+	products, err := m.Product(ctx, src, version)
 	if err != nil {
 		return
 	}
@@ -46,13 +46,8 @@ func (m *ContainerMirror) Build(
 	}
 	productJson := string(b)
 
-	// load config
-	c, err := loadConfig(ctx, src)
-	if err != nil {
-		return
-	}
-	target := fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, product.Repo, product.Tag)
-	target, err = dag.Lib().ArchImageName(ctx, target, product.Architecture)
+	// set target image
+	target, err = dag.Lib().ArchImageName(ctx, product.TargetImage, product.Architecture)
 	if err != nil {
 		return
 	}
