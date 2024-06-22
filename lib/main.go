@@ -48,19 +48,21 @@ func (m *Lib) ArchImageName(image, arch string) (s string) {
 }
 
 func (m *Lib) ManifestTool(
+	ctx context.Context,
 	// GitHub actor, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
 	actor *Secret,
 	// GitHub API token, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
 	token *Secret,
 	image string,
 	arches []string,
-) (s string) {
+) (s string, err error) {
 	// --platforms linux/amd64,linux/s390x,linux/arm64 \
 	// --template foo/bar-ARCH:v1 \
 	// --target foo/bar:v1
-	dag.Container().From("mplatform/manifest-tool:alpine-v2.1.6").
+	return dag.Container().From("mplatform/manifest-tool:alpine-v2.1.6").
 		WithSecretVariable("GITHUB_ACTOR", actor).
 		WithSecretVariable("GITHUB_TOKEN", token).
+		WithFocus().
 		WithExec([]string{
 			"push", "from-args",
 			"--username", "${GITHUB_ACTOR}",
@@ -68,5 +70,5 @@ func (m *Lib) ManifestTool(
 			"--platforms", strings.Join(arches, ","),
 			"--template", image + "-ARCH",
 			"--target", image,
-		})
+		}).Stderr(ctx)
 }
