@@ -22,7 +22,7 @@ import (
 	"strings"
 )
 
-func (m *ContainerMirror) Build(
+func (m *ContainerMirror) Manifest(
 	ctx context.Context,
 	// +default=0
 	index int,
@@ -33,7 +33,7 @@ func (m *ContainerMirror) Build(
 	isDev bool,
 ) (o string, err error) {
 	// generate products
-	products, err := m.Product(ctx, src, version)
+	products, err := m.Product(ctx, src)
 	if err != nil {
 		return
 	}
@@ -46,8 +46,13 @@ func (m *ContainerMirror) Build(
 	}
 	productJson := string(b)
 
-	// set target image
-	target, err := dag.Lib().ArchImageName(ctx, product.TargetImage, product.Architecture)
+	// load config
+	c, err := loadConfig(ctx, src)
+	if err != nil {
+		return
+	}
+	target := fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, product.Repo, product.Tag)
+	target, err = dag.Lib().ArchImageName(ctx, target, product.Architecture)
 	if err != nil {
 		return
 	}
