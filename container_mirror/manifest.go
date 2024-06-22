@@ -23,7 +23,10 @@ func (m *ContainerMirror) Manifest(
 	// run manifest tool for each build
 	for _, b := range c.Builds {
 		image := imageTag(c, b, version)
-		dag.Lib().ManifestTool(ctx, actor, token, image, b.Architectures)
+		o, err = dag.Lib().ManifestTool(ctx, actor, token, image, b.Architectures)
+		if err != nil {
+			return
+		}
 	}
 
 	return
