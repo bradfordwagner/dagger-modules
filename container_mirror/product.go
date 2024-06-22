@@ -20,6 +20,7 @@ import (
 )
 
 type Product struct {
+	Index        int    `json:"index"`
 	Repo         string `json:"repo"`
 	Tag          string `json:"tag"`
 	Architecture string `json:"arch"`
@@ -38,13 +39,16 @@ func (m *ContainerMirror) Product(
 
 	// create a list of products
 	var products []Product
+	var i int
 	for _, b := range c.Builds {
 		for _, a := range b.Architectures {
 			products = append(products, Product{
 				Repo:         b.Repo,
 				Tag:          b.Tag,
 				Architecture: a,
+				Index:        i,
 			})
+			i++
 		}
 	}
 
