@@ -34,7 +34,7 @@ func (m *Lib) ArchToRunner(arch string) (s string) {
 	}
 
 	// default to ubuntu-latest
-	ok, s := archs[arch]
+	s, ok := archs[arch]
 	if !ok {
 		return "ubuntu-latest"
 	}
@@ -43,6 +43,6 @@ func (m *Lib) ArchToRunner(arch string) (s string) {
 
 // ArchImageName returns the image name for the given image and architecture
 func (m *Lib) ArchImageName(image, arch string) (s string) {
-	arch = strings.Replace(arch, "/", "_")
+	arch = strings.ReplaceAll(arch, "/", "_")
 	return image + "-" + arch
 }
