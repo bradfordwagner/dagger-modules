@@ -20,13 +20,25 @@ import (
 
 func (m *ContainerMirror) Manifest(
 	ctx context.Context,
-	// +default=0
-	index int,
 	src *Directory,
 	// +default="latest"
 	version string,
 	// +default=true
 	isDev bool,
+	// GitHub actor, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
+	actor *Secret,
+	// GitHub API token, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
+	token *Secret,
 ) (o string, err error) {
+	c, err := loadConfig(ctx, src)
+	if err != nil {
+		return
+	}
+
+	// run manifest tool for each build
+	for _, b := range c.Builds {
+		dag.Lib().ManifestTool(ctx, actor, token, image, b.Architectures)
+	}
+
 	return
 }
