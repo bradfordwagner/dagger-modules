@@ -52,6 +52,10 @@ func (m *ContainerMirror) Build(
 		return
 	}
 	target := fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, product.Repo, product.Tag)
+	target, err = dag.Lib().ArchImageName(ctx, target, product.Architecture)
+	if err != nil {
+		return
+	}
 
 	//dockerfile setup
 	dockerfile := fmt.Sprintf(`
@@ -61,7 +65,7 @@ func (m *ContainerMirror) Build(
 	container := d.DockerBuild(dagger.DirectoryDockerBuildOpts{
 		Platform: dagger.Platform(product.Architecture),
 	})
-	o = strings.Join([]string{productJson, dockerfile}, "\n")
+	o = strings.Join([]string{target, productJson, dockerfile}, "\n")
 
 	// publish only through pipeline
 	if !isDev {
