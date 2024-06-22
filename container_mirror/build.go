@@ -64,7 +64,7 @@ func (m *ContainerMirror) Build(
 
 	// publish only through pipeline
 	if !isDev {
-		return container.Publish(ctx, target)
+		_, err = container.Publish(ctx, target)
 	}
 
 	return
