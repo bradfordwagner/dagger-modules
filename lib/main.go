@@ -16,6 +16,7 @@ package main
 
 import (
 	"context"
+	"strings"
 )
 
 type Lib struct{}
@@ -24,4 +25,24 @@ type Lib struct{}
 func (m *Lib) OpenConfigYaml(ctx context.Context, src Directory) (s string, err error) {
 	configFile := src.File("config.yaml")
 	return configFile.Contents(ctx)
+}
+
+// Returns the runner to run on for the given architecture
+func (m *Lib) ArchToRunner(arch string) (s string) {
+	archs := map[string]string{
+		"linux/arm64": "arm64",
+	}
+
+	// default to ubuntu-latest
+	ok, s := archs[arch]
+	if !ok {
+		return "ubuntu-latest"
+	}
+	return
+}
+
+// ArchImageName returns the image name for the given image and architecture
+func (m *Lib) ArchImageName(image, arch string) (s string) {
+	arch = strings.Replace(arch, "/", "_")
+	return image + "-" + arch
 }
