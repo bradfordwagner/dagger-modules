@@ -19,7 +19,7 @@ import (
 	"encoding/json"
 )
 
-type Product struct {
+type ProductFormat struct {
 	Index        int    `json:"index"`
 	Repo         string `json:"repo"`
 	Tag          string `json:"tag"`
@@ -31,18 +31,17 @@ type Product struct {
 func (m *ContainerMirror) Product(
 	ctx context.Context,
 	src *Directory,
-) (o string, err error) {
+) (products []ProductFormat, err error) {
 	c, err := loadConfig(ctx, src)
 	if err != nil {
 		return
 	}
 
 	// create a list of products
-	var products []Product
 	var i int
 	for _, b := range c.Builds {
 		for _, a := range b.Architectures {
-			products = append(products, Product{
+			products = append(products, ProductFormat{
 				Repo:         b.Repo,
 				Tag:          b.Tag,
 				Architecture: a,
@@ -52,8 +51,18 @@ func (m *ContainerMirror) Product(
 		}
 	}
 
-	// convert products to json
+	return
+}
+
+func (m *ContainerMirror) ProductJson(
+	ctx context.Context,
+	src *Directory,
+) (o string, err error) {
+	products, err := m.Product(ctx, src)
 	bytes, err := json.Marshal(products)
+	if err != nil {
+		return
+	}
 	o = string(bytes)
 	return
 }
