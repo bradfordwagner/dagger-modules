@@ -56,13 +56,17 @@ func (m *ContainerMirror) Product(
 				Architecture: a,
 				Index:        i,
 				Runner:       runner,
-				TargetImage:  fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, b.Repo, b.Tag),
+				TargetImage:  imageTag(c, b, version),
 			})
 			i++
 		}
 	}
 
 	return
+}
+
+func imageTag(c Config, b Build, version string) string {
+	return fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, b.Repo, b.Tag)
 }
 
 func (m *ContainerMirror) ProductJson(
