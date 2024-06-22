@@ -44,7 +44,7 @@ func (m *ContainerMirror) Build(
 	if err != nil {
 		return
 	}
-	productJson = string(b)
+	productJson := string(b)
 
 	// load config
 	c, err := loadConfig(ctx, src)
