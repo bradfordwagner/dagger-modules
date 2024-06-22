@@ -53,9 +53,10 @@ func (m *ContainerMirror) Build(
 	target := fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, product.Repo, product.Tag)
 
 	//dockerfile setup
-	d := src.WithNewFile("Dockerfile", fmt.Sprintf(`
-		FROM %s:%s
-	`, product.Repo, product.Tag))
+	dockerfile := fmt.Sprintf(`
+			FROM %s:%s
+			`, product.Repo, product.Tag)
+	d := src.WithNewFile("Dockerfile", dockerfile)
 	container := d.DockerBuild(dagger.DirectoryDockerBuildOpts{
 		Platform: dagger.Platform(product.Architecture),
 	})
