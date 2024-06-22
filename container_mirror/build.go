@@ -19,6 +19,7 @@ import (
 	"dagger/container-mirror/internal/dagger"
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 func (m *ContainerMirror) Build(
@@ -43,7 +44,7 @@ func (m *ContainerMirror) Build(
 	if err != nil {
 		return
 	}
-	o = string(b)
+	productJson = string(b)
 
 	// load config
 	c, err := loadConfig(ctx, src)
@@ -60,6 +61,7 @@ func (m *ContainerMirror) Build(
 	container := d.DockerBuild(dagger.DirectoryDockerBuildOpts{
 		Platform: dagger.Platform(product.Architecture),
 	})
+	o = strings.Join([]string{productJson, dockerfile}, "\n")
 
 	// publish only through pipeline
 	if !isDev {
