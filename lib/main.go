@@ -68,7 +68,7 @@ func (m *Lib) ManifestTool(
 			"--password", "${GITHUB_TOKEN}",
 			"push", "from-args",
 			"--platforms", strings.Join(arches, ","),
-			"--template", image + "-ARCH",
+			"--template", image + "-OS_ARCH",
 			"--target", image,
 		}).Stderr(ctx)
 }
