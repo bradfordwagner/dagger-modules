@@ -24,6 +24,7 @@ type ProductFormat struct {
 	Repo         string `json:"repo"`
 	Tag          string `json:"tag"`
 	Architecture string `json:"arch"`
+	Runner       string `json:"runner"`
 }
 
 // Cartesian returns the cartesian product of all builds
@@ -41,11 +42,16 @@ func (m *ContainerMirror) Product(
 	var i int
 	for _, b := range c.Builds {
 		for _, a := range b.Architectures {
+			runner, err := dag.Lib().ArchToRunner(ctx, a)
+			if err != nil {
+				return products, err
+			}
 			products = append(products, ProductFormat{
 				Repo:         b.Repo,
 				Tag:          b.Tag,
 				Architecture: a,
 				Index:        i,
+				Runner:       runner,
 			})
 			i++
 		}
