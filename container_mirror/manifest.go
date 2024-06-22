@@ -16,10 +16,6 @@ package main
 
 import (
 	"context"
-	"dagger/container-mirror/internal/dagger"
-	"encoding/json"
-	"fmt"
-	"strings"
 )
 
 func (m *ContainerMirror) Manifest(
@@ -32,45 +28,5 @@ func (m *ContainerMirror) Manifest(
 	// +default=true
 	isDev bool,
 ) (o string, err error) {
-	// generate products
-	products, err := m.Product(ctx, src)
-	if err != nil {
-		return
-	}
-
-	// load product config
-	product := products[index]
-	b, err := json.Marshal(product)
-	if err != nil {
-		return
-	}
-	productJson := string(b)
-
-	// load config
-	c, err := loadConfig(ctx, src)
-	if err != nil {
-		return
-	}
-	target := fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, product.Repo, product.Tag)
-	target, err = dag.Lib().ArchImageName(ctx, target, product.Architecture)
-	if err != nil {
-		return
-	}
-
-	//dockerfile setup
-	dockerfile := fmt.Sprintf(`
-			FROM %s:%s
-			`, product.Repo, product.Tag)
-	d := src.WithNewFile("Dockerfile", dockerfile)
-	container := d.DockerBuild(dagger.DirectoryDockerBuildOpts{
-		Platform: dagger.Platform(product.Architecture),
-	})
-	o = strings.Join([]string{target, productJson, dockerfile}, "\n")
-
-	// publish only through pipeline
-	if !isDev {
-		return container.Publish(ctx, target)
-	}
-
 	return
 }

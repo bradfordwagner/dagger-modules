@@ -68,8 +68,10 @@ func (m *ContainerMirror) Product(
 func (m *ContainerMirror) ProductJson(
 	ctx context.Context,
 	src *Directory,
+	// +default="latest"
+	version string,
 ) (o string, err error) {
-	products, err := m.Product(ctx, src)
+	products, err := m.Product(ctx, src, version)
 	bytes, err := json.Marshal(products)
 	if err != nil {
 		return
