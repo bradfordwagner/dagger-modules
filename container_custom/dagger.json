@@ -1,0 +1,5 @@
+{
+  "name": "container_custom",
+  "sdk": "go",
+  "engineVersion": "v0.11.8"
+}
