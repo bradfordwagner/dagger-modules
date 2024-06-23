@@ -1,17 +1,3 @@
-// A generated module for ContainerMirror functions
-//
-// This module has been generated via dagger init and serves as a reference to
-// basic module structure as you get started with Dagger.
-//
-// Two functions have been pre-created. You can modify, delete, or add to them,
-// as needed. They demonstrate usage of arguments and return types using simple
-// echo and grep commands. The functions can be called from the dagger CLI or
-// from one of the SDKs.
-//
-// The first line in this comment block is a short description line and the
-// rest is a long description with more detail on the module's purpose or usage,
-// if appropriate. All modules should have a short description.
-
 package main
 
 import (
@@ -29,6 +15,7 @@ type Config struct {
 
 type Build struct {
 	Repo          string   `yaml:"repo"`
+	RepoOverride  string   `yaml:"repo_override"` // renames repo to override in the target image
 	Tag           string   `yaml:"tag"`
 	Architectures []string `yaml:"archs"`
 }
@@ -47,6 +34,7 @@ func (m *ContainerMirror) Mirror(
 	return c.TargetRepo, nil
 }
 
+// loadConfig loads the config.yaml from the source directory
 func loadConfig(ctx context.Context, src *Directory) (c Config, err error) {
 	yml, _ := dag.Lib().OpenConfigYaml(ctx, src)
 	err = yaml.Unmarshal([]byte(yml), &c)

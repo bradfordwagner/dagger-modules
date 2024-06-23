@@ -51,11 +51,11 @@ func (m *ContainerMirror) Product(
 				return products, err
 			}
 			products = append(products, ProductFormat{
-				Repo:         b.Repo,
-				Tag:          b.Tag,
 				Architecture: a,
 				Index:        i,
+				Repo:         b.Repo,
 				Runner:       runner,
+				Tag:          b.Tag,
 				TargetImage:  imageTag(c, b, version),
 			})
 			i++
@@ -66,7 +66,11 @@ func (m *ContainerMirror) Product(
 }
 
 func imageTag(c Config, b Build, version string) string {
-	return fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, b.Repo, b.Tag)
+	repo := b.Repo
+	if b.RepoOverride != "" {
+		repo = b.RepoOverride
+	}
+	return fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, repo, b.Tag)
 }
 
 func (m *ContainerMirror) ProductJson(
