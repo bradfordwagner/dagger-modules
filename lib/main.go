@@ -56,19 +56,26 @@ func (m *Lib) ManifestTool(
 	image string,
 	arches []string,
 ) (s string, err error) {
-	// --platforms linux/amd64,linux/s390x,linux/arm64 \
-	// --template foo/bar-ARCH:v1 \
-	// --target foo/bar:v1
-	return dag.Container().From("mplatform/manifest-tool:alpine-v2.1.6").
-		WithSecretVariable("GITHUB_ACTOR", actor).
-		WithSecretVariable("GITHUB_TOKEN", token).
+	username, _ := actor.Plaintext(ctx)
+	password, _ := token.Plaintext(ctx)
+	c := dag.Container().From("mplatform/manifest-tool:alpine-v2.1.6").
 		WithFocus().
 		WithExec([]string{
-			"--username", "$GITHUB_ACTOR",
-			"--password", "$GITHUB_TOKEN",
+			"--username", username,
+			"--password", password,
 			"push", "from-args",
 			"--platforms", strings.Join(arches, ","),
 			"--template", image + "-OS_ARCH",
 			"--target", image,
-		}).Stderr(ctx)
+		})
+	return m.ContainerOutput(ctx, c)
+}
+
+// ContainerOutput returns the output of a container as a string if stderr exists return that, else stdout
+func (m *Lib) ContainerOutput(ctx context.Context, c *Container) (s string, err error) {
+	s, err = c.Stderr(ctx)
+	if err != nil || s != "" {
+		return
+	}
+	return c.Stdout(ctx)
 }
