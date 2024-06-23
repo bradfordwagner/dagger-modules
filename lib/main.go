@@ -59,7 +59,8 @@ func (m *Lib) ManifestTool(
 	// --platforms linux/amd64,linux/s390x,linux/arm64 \
 	// --template foo/bar-ARCH:v1 \
 	// --target foo/bar:v1
-	return dag.Container().From("mplatform/manifest-tool:alpine-v2.1.6").
+	// return dag.Container().From("mplatform/manifest-tool:alpine-v2.1.6").
+	return dag.Container().From("mplatform/manifest-tool:alpine-v2.0.3").
 		WithSecretVariable("GITHUB_ACTOR", actor).
 		WithSecretVariable("GITHUB_TOKEN", token).
 		WithFocus().
