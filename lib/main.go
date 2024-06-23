@@ -49,9 +49,9 @@ func (m *Lib) ArchImageName(image, arch string) (s string) {
 
 func (m *Lib) ManifestTool(
 	ctx context.Context,
-	// GitHub actor, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
+	// GitHub actor, --token=env:github_actor,--token=cmd:"gh auth token"
 	actor *Secret,
-	// GitHub API token, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
+	// GitHub API token, --token=env:github_token,--token=cmd:"gh auth token"
 	token *Secret,
 	image string,
 	arches []string,
