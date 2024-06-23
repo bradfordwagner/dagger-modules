@@ -73,6 +73,7 @@ func imageTag(c Config, b Build, version string) string {
 	return fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, repo, b.Tag)
 }
 
+// ProductJson returns the cartesian product of all builds as a json string, used for github actions matrix
 func (m *ContainerMirror) ProductJson(
 	ctx context.Context,
 	src *Directory,
