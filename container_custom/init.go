@@ -13,19 +13,23 @@ func (m *ContainerCustom) Init(
 ) (s string, err error) {
 	// default config
 	c := Config{
-		TargetRepo: "ghcr.io/bradfordwagner/template-mirror",
+		TargetRepo: "ghcr.io/bradfordwagner/ansible",
+		Upstream: Upstream{
+			Repo: "ghcr.io/bradfordwagner/base",
+			Tag:  "3.6.0",
+		},
 		Builds: []Build{
-			{Repo: "alpine", Tag: "3.18", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "alpine", Tag: "3.19", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "alpine", Tag: "3.20", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "archlinux", Tag: "latest", Architectures: []string{"linux/amd64"}},
-			{Repo: "debian", Tag: "bookworm", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "debian", Tag: "bookworm-slim", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "rockylinux", Tag: "8", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "rockylinux", Tag: "9", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "ubuntu", Tag: "jammy", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "ubuntu", Tag: "mantic", Architectures: []string{"linux/amd64", "linux/arm64"}},
-			{Repo: "ubuntu", Tag: "noble", Architectures: []string{"linux/amd64", "linux/arm64"}},
+			Build{OS: "alpine_3.18", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "alpine"}},
+			Build{OS: "alpine_3.19", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "alpine"}},
+			Build{OS: "alpine_3.20", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "alpine"}},
+			Build{OS: "archlinux_latest", Architectures: []string{"linux/amd64"}, Args: map[string]string{"pkg_installer": "arch"}},
+			Build{OS: "debian_bookworm", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "debian"}},
+			Build{OS: "debian_bookworm-slim", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "debian"}},
+			Build{OS: "rockylinux_8", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "rhel"}},
+			Build{OS: "rockylinux_9", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "rhel"}},
+			Build{OS: "ubuntu_jammy", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "debian"}},
+			Build{OS: "ubuntu_mantic", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "debian"}},
+			Build{OS: "ubuntu_noble", Architectures: []string{"linux/amd64", "linux/arm64"}, Args: map[string]string{"pkg_installer": "debian"}},
 		},
 	}
 

@@ -41,8 +41,8 @@ func (m *ContainerCustom) Build(
 
 	//dockerfile setup
 	dockerfile := fmt.Sprintf(`
-			FROM %s:%s
-			`, product.Repo, product.Tag)
+			FROM %s
+			`, product.UpstreamImage)
 	d := src.WithNewFile("Dockerfile", dockerfile)
 	container := d.DockerBuild(dagger.DirectoryDockerBuildOpts{
 		Platform: dagger.Platform(product.Architecture),

@@ -6,18 +6,23 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type ContainerMirror struct{}
+type ContainerCustom struct{}
 
 type Config struct {
-	TargetRepo string  `yaml:"target_repo"`
-	Builds     []Build `yaml:"builds"`
+	TargetRepo string   `yaml:"target_repo"`
+	Builds     []Build  `yaml:"builds"`
+	Upstream   Upstream `yaml:"upstream"`
+}
+
+type Upstream struct {
+	Repo string `yaml:"repo"`
+	Tag  string `yaml:"tag"`
 }
 
 type Build struct {
-	Repo          string   `yaml:"repo"`
-	RepoOverride  string   `yaml:"repo_override"` // renames repo to override in the target image
-	Tag           string   `yaml:"tag"`
-	Architectures []string `yaml:"archs"`
+	OS            string            `yaml:"os"`
+	Architectures []string          `yaml:"archs"`
+	Args          map[string]string `yaml:"args"`
 }
 
 // loadConfig loads the config.yaml from the source directory

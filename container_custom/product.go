@@ -7,12 +7,12 @@ import (
 )
 
 type ProductFormat struct {
-	Index        int    `json:"index"`
-	Repo         string `json:"repo"`
-	Tag          string `json:"tag"`
-	Architecture string `json:"arch"`
-	Runner       string `json:"runner"`
-	TargetImage  string `json:"target_image"` // without architecture suffix
+	Index         int    `json:"index"`
+	OS            string `json:"os"`
+	Architecture  string `json:"arch"`
+	Runner        string `json:"runner"`
+	TargetImage   string `json:"target_image"` // without architecture suffix
+	UpstreamImage string `json:"upstream_image"`
 }
 
 // Cartesian returns the cartesian product of all builds
@@ -37,12 +37,12 @@ func (m *ContainerCustom) Product(
 				return products, err
 			}
 			products = append(products, ProductFormat{
-				Architecture: a,
-				Index:        i,
-				Repo:         b.Repo,
-				Runner:       runner,
-				Tag:          b.Tag,
-				TargetImage:  imageTag(c, b, version),
+				Architecture:  a,
+				Index:         i,
+				OS:            b.OS,
+				Runner:        runner,
+				TargetImage:   imageTag(c, b, version),
+				UpstreamImage: fmt.Sprintf("%s:%s-%s", c.Upstream.Repo, c.Upstream.Tag, b.OS),
 			})
 			i++
 		}
@@ -52,11 +52,7 @@ func (m *ContainerCustom) Product(
 }
 
 func imageTag(c Config, b Build, version string) string {
-	repo := b.Repo
-	if b.RepoOverride != "" {
-		repo = b.RepoOverride
-	}
-	return fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, repo, b.Tag)
+	return fmt.Sprintf("%s:%s-%s", c.TargetRepo, version, b.OS)
 }
 
 // ProductJson returns the cartesian product of all builds as a json string, used for github actions matrix
