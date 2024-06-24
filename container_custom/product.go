@@ -7,9 +7,9 @@ import (
 )
 
 type ProductFormat struct {
+	Architecture  string `json:"arch"`
 	Index         int    `json:"index"`
 	OS            string `json:"os"`
-	Architecture  string `json:"arch"`
 	Runner        string `json:"runner"`
 	TargetImage   string `json:"target_image"` // without architecture suffix
 	UpstreamImage string `json:"upstream_image"`

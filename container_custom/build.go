@@ -39,10 +39,25 @@ func (m *ContainerCustom) Build(
 		return
 	}
 
+	// find build to pull args
+	c, err := loadConfig(ctx, src)
+	if err != nil {
+		return
+	}
+	var build Build
+	for _, b := range c.Builds {
+		if b.OS == product.OS {
+			build = b
+			break
+		}
+	}
+
 	//dockerfile setup
-	dockerfile := fmt.Sprintf(`
-			FROM %s
-			`, product.UpstreamImage)
+	dockerfile := fmt.Sprintf("FROM %s\n", product.UpstreamImage)
+	for k, v := range build.Args {
+		dockerfile += fmt.Sprintf("ARG %s=%s\n", k, v)
+	}
+	dockerfile += c.Dockerfile
 	d := src.WithNewFile("Dockerfile", dockerfile)
 	container := d.DockerBuild(dagger.DirectoryDockerBuildOpts{
 		Platform: dagger.Platform(product.Architecture),
