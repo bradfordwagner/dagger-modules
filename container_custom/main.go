@@ -12,7 +12,6 @@ type Config struct {
 	TargetRepo string   `yaml:"target_repo"`
 	Builds     []Build  `yaml:"builds"`
 	Upstream   Upstream `yaml:"upstream"`
-	Dockerfile string   `yaml:"dockerfile"`
 }
 
 type Upstream struct {

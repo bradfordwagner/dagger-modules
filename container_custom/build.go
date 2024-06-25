@@ -4,7 +4,6 @@ import (
 	"context"
 	"dagger/container-custom/internal/dagger"
 	"encoding/json"
-	"fmt"
 	"strings"
 )
 
@@ -53,16 +52,18 @@ func (m *ContainerCustom) Build(
 	}
 
 	//dockerfile setup
-	dockerfile := fmt.Sprintf("FROM %s\n", product.UpstreamImage)
+	var buildArgs []BuildArg
 	for k, v := range build.Args {
-		dockerfile += fmt.Sprintf("ARG %s=%s\n", k, v)
+		buildArgs = append(buildArgs, BuildArg{Name: k, Value: v})
 	}
-	dockerfile += c.Dockerfile
-	d := src.WithNewFile("Dockerfile", dockerfile)
-	container := d.DockerBuild(dagger.DirectoryDockerBuildOpts{
-		Platform: dagger.Platform(product.Architecture),
-	})
-	o = strings.Join([]string{target, productJson, dockerfile}, "\n")
+	buildArgs = append(buildArgs, BuildArg{Name: "OS", Value: product.UpstreamImage})
+
+	container, err := src.DockerBuild(dagger.DirectoryDockerBuildOpts{
+		Platform:  dagger.Platform(product.Architecture),
+		BuildArgs: buildArgs,
+	}).WithFocus().Sync(ctx)
+
+	o = strings.Join([]string{target, productJson}, "\n")
 
 	// publish only through pipeline
 	if !isDev {

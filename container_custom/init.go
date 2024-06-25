@@ -14,7 +14,6 @@ func (m *ContainerCustom) Init(
 	// default config
 	c := Config{
 		TargetRepo: "ghcr.io/bradfordwagner/ansible",
-		Dockerfile: "RUN echo hello world",
 		Upstream: Upstream{
 			Repo: "ghcr.io/bradfordwagner/base",
 			Tag:  "3.6.0",
