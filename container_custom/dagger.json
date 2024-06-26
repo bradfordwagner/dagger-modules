@@ -1,0 +1,12 @@
+{
+  "name": "container_custom",
+  "sdk": "go",
+  "dependencies": [
+    {
+      "name": "lib",
+      "source": "github.com/bradfordwagner/dagger-modules/lib@2f33d9d704551cc059dfefa88b6063b82e271031"
+    }
+  ],
+  "source": ".",
+  "engineVersion": "v0.11.8"
+}
