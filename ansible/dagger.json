@@ -1,0 +1,5 @@
+{
+  "name": "ansible",
+  "sdk": "go",
+  "engineVersion": "v0.11.8"
+}
