@@ -19,6 +19,8 @@ func (m *Ansible) Build(
 	invalidateCache bool,
 	// +default=true
 	isDev bool,
+	// +default="playbook"
+	flavor string,
 ) (o string, err error) {
 	// generate products
 	products, err := m.Product(ctx, src, version)
@@ -75,7 +77,7 @@ func (m *Ansible) Build(
 	o = strings.Join([]string{target, productJson}, "\n")
 
 	// publish only through pipeline
-	if !isDev {
+	if !isDev && flavor == "playbook" {
 		_, err = container.Publish(ctx, target)
 	}
 
