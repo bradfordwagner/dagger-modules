@@ -79,3 +79,12 @@ func (m *Lib) ContainerOutput(ctx context.Context, c *Container) (s string, err 
 	}
 	return c.Stdout(ctx)
 }
+
+// FileContents - returns the contents of a file in a directory
+func (m *Lib) FileContents(ctx context.Context, dir *Directory, path string) (contents string, ok bool, err error) {
+	if file := dir.File(path); file != nil {
+		var contents string
+		ok = contents != "" && err == nil
+	}
+	return
+}
