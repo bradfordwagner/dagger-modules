@@ -4,7 +4,7 @@
   "dependencies": [
     {
       "name": "lib",
-      "source": "github.com/bradfordwagner/dagger-modules/lib@50cf98bacc919ce95d49768ee889ff9bfee22e97"
+      "source": "github.com/bradfordwagner/dagger-modules/lib@d55049814c9c185965f6a2b3d91d8adc1f7faf58"
     }
   ],
   "source": ".",

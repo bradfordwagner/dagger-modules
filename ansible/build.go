@@ -5,7 +5,6 @@ import (
 	"dagger/ansible/internal/dagger"
 	"encoding/json"
 	"strings"
-	"time"
 )
 
 // Build - builds the container image
@@ -44,11 +43,8 @@ func (m *Ansible) Build(
 	// build the container
 	container := dag.Container(ContainerOpts{
 		Platform: dagger.Platform(product.Architecture),
-	}).From(product.UpstreamImage).WithDirectory("/src", src).WithEnvVariable("CACHEBUSTER", time.Now().String())
-
-	if invalidateCache {
-		container = container.WithEnvVariable("CACHEBUSTER", time.Now().String())
-	}
+	}).From(product.UpstreamImage).WithDirectory("/src", src)
+	container = dag.Lib().InvalidateCache(invalidateCache, container)
 
 	// find requirements
 	requirements := []string{"requirements.yml", "meta/requirements.yml"}
