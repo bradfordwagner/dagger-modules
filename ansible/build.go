@@ -5,6 +5,7 @@ import (
 	"dagger/ansible/internal/dagger"
 	"encoding/json"
 	"strings"
+	"time"
 )
 
 // Build - builds the container image
@@ -15,6 +16,8 @@ func (m *Ansible) Build(
 	src *Directory,
 	// +default="latest"
 	version string,
+	// +default=false
+	invalidateCache bool,
 	// +default=true
 	isDev bool,
 ) (o string, err error) {
@@ -41,18 +44,21 @@ func (m *Ansible) Build(
 	// build the container
 	container := dag.Container(ContainerOpts{
 		Platform: dagger.Platform(product.Architecture),
-	}).From(product.UpstreamImage).WithDirectory("/src", src)
+	}).From(product.UpstreamImage).WithDirectory("/src", src).WithEnvVariable("CACHEBUSTER", time.Now().String())
+
+	if invalidateCache {
+		container = container.WithEnvVariable("CACHEBUSTER", time.Now().String())
+	}
 
 	// find requirements
 	requirements := []string{"requirements.yml", "meta/requirements.yml"}
+	dir := container.Directory("/src")
 	for _, requirement := range requirements {
-		if file := container.Directory("/src").File(requirement); file != nil {
-			var contents string
-			if contents, err = file.Contents(ctx); contents != "" && err == nil {
-				container, err = container.WithExec([]string{"ansible-galaxy", "install", "-r", requirement}).Sync(ctx)
-				if err != nil {
-					return
-				}
+		var contents string
+		if contents, err = dag.Lib().FileContents(ctx, dir, requirement); contents != "" {
+			container, err = container.WithExec([]string{"ansible-galaxy", "install", "-r", requirement}).Sync(ctx)
+			if err != nil {
+				return
 			}
 		}
 	}
@@ -60,13 +66,11 @@ func (m *Ansible) Build(
 	// run playbook
 	playbooks := []string{"test.yml", "playbook.yml"}
 	for _, playbook := range playbooks {
-		if file := container.Directory("/src").File(playbook); file != nil {
-			var contents string
-			if contents, err = file.Contents(ctx); contents != "" && err == nil {
-				container, err = container.WithExec([]string{"ansible-playbook", playbook}).Sync(ctx)
-				if err != nil {
-					return
-				}
+		var contents string
+		if contents, err = dag.Lib().FileContents(ctx, dir, playbook); contents != "" {
+			container, err = container.WithExec([]string{"ansible-playbook", playbook}).Sync(ctx)
+			if err != nil {
+				return
 			}
 		}
 	}
