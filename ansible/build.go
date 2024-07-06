@@ -48,6 +48,12 @@ func (m *Ansible) Build(
 	}).From(product.UpstreamImage).WithDirectory("/src", src)
 	container = dag.Lib().InvalidateCache(invalidateCache, container)
 
+	// ensure there was no problem with "from" image
+	o, err = dag.Lib().ContainerOutput(ctx, container)
+	if err != nil {
+		return
+	}
+
 	// find requirements
 	requirements := []string{"requirements.yml", "meta/requirements.yml"}
 	dir := container.Directory("/src")
