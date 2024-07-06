@@ -17,6 +17,7 @@ package main
 import (
 	"context"
 	"strings"
+	"time"
 )
 
 type Lib struct{}
@@ -78,4 +79,20 @@ func (m *Lib) ContainerOutput(ctx context.Context, c *Container) (s string, err 
 		return
 	}
 	return c.Stdout(ctx)
+}
+
+// FileContents - returns the contents of a file in a directory
+func (m *Lib) FileContents(ctx context.Context, dir *Directory, path string) (contents string, err error) {
+	if file := dir.File(path); file != nil {
+		contents, err = file.Contents(ctx)
+	}
+	return
+}
+
+// InvalidateCache invalidates the cache if the shouldInvalidate is true
+func (m *Lib) InvalidateCache(shouldInvalidate bool, container *Container) *Container {
+	if shouldInvalidate {
+		container = container.WithEnvVariable("CACHEBUSTER", time.Now().String())
+	}
+	return container
 }
