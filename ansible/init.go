@@ -14,7 +14,7 @@ func (m *Ansible) Init(
 		TargetRepo: "ghcr.io/bradfordwagner/gh-template-ansible-playbook",
 		Upstream: Upstream{
 			Repo: "ghcr.io/bradfordwagner/ansible",
-			Tag:  "5.9.1",
+			Tag:  "5.10.0",
 		},
 		Builds: []Build{
 			Build{OS: "alpine_3.18", Architectures: []string{"linux/amd64", "linux/arm64"}},
