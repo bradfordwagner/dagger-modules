@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/container-custom/internal/dagger"
 
 	"gopkg.in/yaml.v3"
 )
@@ -26,7 +27,7 @@ type Build struct {
 }
 
 // loadConfig loads the config.yaml from the source directory
-func loadConfig(ctx context.Context, src *Directory) (c Config, err error) {
+func loadConfig(ctx context.Context, src *dagger.Directory) (c Config, err error) {
 	yml, _ := dag.Lib().OpenConfigYaml(ctx, src)
 	err = yaml.Unmarshal([]byte(yml), &c)
 	if err != nil {
