@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/ansible/internal/dagger"
 	"encoding/json"
 	"fmt"
 )
@@ -19,7 +20,7 @@ type ProductFormat struct {
 // this is used to explode the builds
 func (m *Ansible) Product(
 	ctx context.Context,
-	src *Directory,
+	src *dagger.Directory,
 	// +default="latest"
 	version string,
 ) (products []ProductFormat, err error) {
@@ -58,7 +59,7 @@ func imageTag(c Config, b Build, version string) string {
 // ProductJson returns the cartesian product of all builds as a json string, used for github actions matrix
 func (m *Ansible) ProductJson(
 	ctx context.Context,
-	src *Directory,
+	src *dagger.Directory,
 	// +default="latest"
 	version string,
 ) (o string, err error) {

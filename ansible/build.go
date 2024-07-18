@@ -12,7 +12,7 @@ func (m *Ansible) Build(
 	ctx context.Context,
 	// +default=0
 	index int,
-	src *Directory,
+	src *dagger.Directory,
 	// +default="latest"
 	version string,
 	// +default=false
@@ -43,7 +43,7 @@ func (m *Ansible) Build(
 	}
 
 	// build the container
-	container := dag.Container(ContainerOpts{
+	container := dag.Container(dagger.ContainerOpts{
 		Platform: dagger.Platform(product.Architecture),
 	}).From(product.UpstreamImage).WithDirectory("/src", src)
 	container = dag.Lib().InvalidateCache(invalidateCache, container)

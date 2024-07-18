@@ -16,17 +16,18 @@ package main
 
 import (
 	"context"
+	"dagger/ansible/internal/dagger"
 )
 
 type Ansible struct{}
 
 // Returns a container that echoes whatever string argument is provided
-func (m *Ansible) ContainerEcho(stringArg string) *Container {
+func (m *Ansible) ContainerEcho(stringArg string) *dagger.Container {
 	return dag.Container().From("alpine:latest").WithExec([]string{"echo", stringArg})
 }
 
 // Returns lines that match a pattern in the files of the provided Directory
-func (m *Ansible) GrepDir(ctx context.Context, directoryArg *Directory, pattern string) (string, error) {
+func (m *Ansible) GrepDir(ctx context.Context, directoryArg *dagger.Directory, pattern string) (string, error) {
 	return dag.Container().
 		From("alpine:latest").
 		WithMountedDirectory("/mnt", directoryArg).
