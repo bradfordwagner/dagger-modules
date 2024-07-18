@@ -2,18 +2,19 @@ package main
 
 import (
 	"context"
+	"dagger/container-mirror/internal/dagger"
 )
 
 // Manifest - configures manifest in registry. not meant to be run locally
 func (m *ContainerMirror) Manifest(
 	ctx context.Context,
-	src *Directory,
+	src *dagger.Directory,
 	// +default="latest"
 	version string,
 	// GitHub actor, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
-	actor *Secret,
+	actor *dagger.Secret,
 	// GitHub API token, --token=env:GITHUB_API_TOKEN,--token=cmd:"gh auth token"
-	token *Secret,
+	token *dagger.Secret,
 ) (o string, err error) {
 	c, err := loadConfig(ctx, src)
 	if err != nil {
