@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/container-mirror/internal/dagger"
 
 	"gopkg.in/yaml.v3"
 )
@@ -24,7 +25,7 @@ type Build struct {
 // func (m *ContainerMirror) Mirror() *Container {
 func (m *ContainerMirror) Mirror(
 	ctx context.Context,
-	src *Directory,
+	src *dagger.Directory,
 ) (o string, err error) {
 	c, err := loadConfig(ctx, src)
 	if err != nil {
@@ -35,7 +36,7 @@ func (m *ContainerMirror) Mirror(
 }
 
 // loadConfig loads the config.yaml from the source directory
-func loadConfig(ctx context.Context, src *Directory) (c Config, err error) {
+func loadConfig(ctx context.Context, src *dagger.Directory) (c Config, err error) {
 	yml, _ := dag.Lib().OpenConfigYaml(ctx, src)
 	err = yaml.Unmarshal([]byte(yml), &c)
 	if err != nil {

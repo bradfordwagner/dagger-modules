@@ -13,7 +13,7 @@ func (m *ContainerMirror) Build(
 	ctx context.Context,
 	// +default=0
 	index int,
-	src *Directory,
+	src *dagger.Directory,
 	// +default="latest"
 	version string,
 	// +default=true

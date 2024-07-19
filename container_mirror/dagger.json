@@ -4,9 +4,9 @@
   "dependencies": [
     {
       "name": "lib",
-      "source": "github.com/bradfordwagner/dagger-modules/lib@50548ee2ad52f31ce68a6eb791295d7c39fb0e04"
+      "source": "github.com/bradfordwagner/dagger-modules/lib@a544032f025d9b71e8dff1e3a04d9e2d81b097ae"
     }
   ],
   "source": ".",
-  "engineVersion": "v0.11.9"
+  "engineVersion": "v0.12.0"
 }
