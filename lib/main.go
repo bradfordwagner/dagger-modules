@@ -16,6 +16,7 @@ package main
 
 import (
 	"context"
+	"dagger/lib/internal/dagger"
 	"strings"
 	"time"
 )
@@ -23,7 +24,7 @@ import (
 type Lib struct{}
 
 // Returns lines that match a pattern in the files of the provided Directory
-func (m *Lib) OpenConfigYaml(ctx context.Context, src Directory) (s string, err error) {
+func (m *Lib) OpenConfigYaml(ctx context.Context, src dagger.Directory) (s string, err error) {
 	configFile := src.File("config.yaml")
 	return configFile.Contents(ctx)
 }
@@ -51,9 +52,9 @@ func (m *Lib) ArchImageName(image, arch string) (s string) {
 func (m *Lib) ManifestTool(
 	ctx context.Context,
 	// GitHub actor, --token=env:github_actor,--token=cmd:"gh auth token"
-	actor *Secret,
+	actor *dagger.Secret,
 	// GitHub API token, --token=env:github_token,--token=cmd:"gh auth token"
-	token *Secret,
+	token *dagger.Secret,
 	image string,
 	arches []string,
 ) (s string, err error) {
@@ -73,7 +74,7 @@ func (m *Lib) ManifestTool(
 }
 
 // ContainerOutput returns the output of a container as a string if stderr exists return that, else stdout
-func (m *Lib) ContainerOutput(ctx context.Context, c *Container) (s string, err error) {
+func (m *Lib) ContainerOutput(ctx context.Context, c *dagger.Container) (s string, err error) {
 	s, err = c.Stderr(ctx)
 	if err != nil || s != "" {
 		return
@@ -82,7 +83,7 @@ func (m *Lib) ContainerOutput(ctx context.Context, c *Container) (s string, err 
 }
 
 // FileContents - returns the contents of a file in a directory
-func (m *Lib) FileContents(ctx context.Context, dir *Directory, path string) (contents string, err error) {
+func (m *Lib) FileContents(ctx context.Context, dir *dagger.Directory, path string) (contents string, err error) {
 	if file := dir.File(path); file != nil {
 		contents, err = file.Contents(ctx)
 	}
@@ -90,7 +91,7 @@ func (m *Lib) FileContents(ctx context.Context, dir *Directory, path string) (co
 }
 
 // InvalidateCache invalidates the cache if the shouldInvalidate is true
-func (m *Lib) InvalidateCache(shouldInvalidate bool, container *Container) *Container {
+func (m *Lib) InvalidateCache(shouldInvalidate bool, container *dagger.Container) *dagger.Container {
 	if shouldInvalidate {
 		container = container.WithEnvVariable("CACHEBUSTER", time.Now().String())
 	}
