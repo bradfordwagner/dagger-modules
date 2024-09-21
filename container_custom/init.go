@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/container-custom/internal/dagger"
 
 	"gopkg.in/yaml.v3"
 )
@@ -9,7 +10,7 @@ import (
 // Init creates an example yaml config for cicd to use
 func (m *ContainerCustom) Init(
 	ctx context.Context,
-	src *Directory,
+	src *dagger.Directory,
 ) (s string, err error) {
 	// default config
 	c := Config{

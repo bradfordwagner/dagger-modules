@@ -12,7 +12,7 @@ func (m *ContainerCustom) Build(
 	ctx context.Context,
 	// +default=0
 	index int,
-	src *Directory,
+	src *dagger.Directory,
 	// +default="latest"
 	version string,
 	// +default=true
@@ -52,11 +52,11 @@ func (m *ContainerCustom) Build(
 	}
 
 	//dockerfile setup
-	var buildArgs []BuildArg
+	var buildArgs []dagger.BuildArg
 	for k, v := range build.Args {
-		buildArgs = append(buildArgs, BuildArg{Name: k, Value: v})
+		buildArgs = append(buildArgs, dagger.BuildArg{Name: k, Value: v})
 	}
-	buildArgs = append(buildArgs, BuildArg{Name: "OS", Value: product.UpstreamImage})
+	buildArgs = append(buildArgs, dagger.BuildArg{Name: "OS", Value: product.UpstreamImage})
 
 	container, err := src.DockerBuild(dagger.DirectoryDockerBuildOpts{
 		Platform:  dagger.Platform(product.Architecture),
