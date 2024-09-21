@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
+	"dagger/ansible/internal/dagger"
 	"gopkg.in/yaml.v3"
 )
 
 func (m *Ansible) Init(
 	ctx context.Context,
-	src *Directory,
+	src *dagger.Directory,
 ) (s string, err error) {
 	// default config
 	c := Config{
