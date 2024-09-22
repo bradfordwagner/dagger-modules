@@ -26,7 +26,6 @@ type Lib struct{}
 // Returns lines that match a pattern in the files of the provided Directory
 func (m *Lib) OpenConfigYaml(
 	ctx context.Context,
-	// +defaultPath="/"
 	src dagger.Directory,
 ) (s string, err error) {
 	configFile := src.File("config.yaml")
