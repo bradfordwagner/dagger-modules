@@ -45,7 +45,8 @@ func (m *Ansible) Build(
 	// build the container
 	container := dag.Container(dagger.ContainerOpts{
 		Platform: dagger.Platform(product.Architecture),
-	}).From(product.UpstreamImage).WithDirectory("/src", src)
+	}).From(product.UpstreamImage).WithDirectory("/src", src).
+		WithFocus()
 	container = dag.Lib().InvalidateCache(invalidateCache, container)
 
 	// find requirements
