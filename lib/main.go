@@ -17,6 +17,7 @@ package main
 import (
 	"context"
 	"dagger/lib/internal/dagger"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -66,7 +67,7 @@ func (m *Lib) ManifestTool(
 	c := dag.Container().From("mplatform/manifest-tool:alpine-v2.1.6").
 		WithFocus().
 		WithExec([]string{
-			"--username", username,
+			"--username", fmt.Sprintf("'%s'", username),
 			"--password", password,
 			"push", "from-args",
 			"--platforms", strings.Join(arches, ","),
