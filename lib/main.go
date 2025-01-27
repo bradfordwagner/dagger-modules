@@ -36,7 +36,8 @@ func (m *Lib) OpenConfigYaml(
 // Returns the runner to run on for the given architecture
 func (m *Lib) ArchToRunner(arch string) (s string) {
 	archs := map[string]string{
-		"linux/arm64": "arm64",
+		"linux/arm64": "ubuntu-22.04-arm",
+		// "linux/arm64": "arm64",
 	}
 
 	// default to ubuntu-latest
